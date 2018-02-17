@@ -1,7 +1,8 @@
 [submodule "libhttpserver"]
 	path = libhttpserver
-	url = https://github.com/mchalain/libhttpserver
+	url = https://github.com/ouistiti-project/libhttpserver
 	branch = master
+	tag = 1.3
 [submodule "libb64"]
 	path = libb64
 	url = https://github.com/mchalain/libb64
