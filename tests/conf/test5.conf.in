@@ -5,7 +5,7 @@ servers= ({
 		keepalivetimeout = 5;
 		version="HTTP11";
 		websocket = {
-			docroot = "/tmp";
+			docroot = "%PWD%/tests";
 			deny = "*";
 			allow = "echo";
 		};
