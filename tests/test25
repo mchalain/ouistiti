@@ -2,7 +2,7 @@ DESC="test websocket startup in direct mode"
 CONFIG=test6.conf
 #PREPARE_ASYNC="LD_PRELOAD=./utils/libouistiti_ws.so ./utils/websocket_echo -R /tmp -u $USER -t"
 #PREPARE_ASYNC="./utils/websocket_echo -R /tmp -u $USER -t"
-PREPARE="./utils/websocket_echo -R ./tests/ -u $USER -t -D"
+PREPARE="./utils/websocket_echo -R $PWD/tests/ -u $USER -t -D"
 #CLEAN="killall -9 websocket_echo"
 TESTOPTION="-w"
 TESTREQUEST=test24_rq.txt
