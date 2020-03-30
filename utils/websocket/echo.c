@@ -177,9 +177,16 @@ int main(int argc, char **argv)
 		}
 	} while(opt != -1);
 
-	if (access(root, R_OK|W_OK|X_OK))
+
+	printf("echo: access\n");
+	ret = access(root, R_OK|W_OK|X_OK);
+	printf(" %d %s\n", ret, strerror(errno));
+	if (ret < 0)
 	{
-		if (mkdir(root, 0777))
+		printf("echo: mkdir\n");
+		ret = mkdir(root, 0777);
+		printf(" %d %s\n", ret, strerror(errno));
+		if (ret)
 		{
 			err("access %s error %s", root, strerror(errno));
 			return -1;
@@ -187,7 +194,10 @@ int main(int argc, char **argv)
 		chmod(root, 0777);
 	}
 
-	if (getuid() == 0)
+	printf("echo: getuid\n");
+	ret = getuid();
+	printf(" %d %s\n", ret, strerror(errno));
+	if (ret == 0)
 	{
 		struct passwd *user = NULL;
 		user = getpwnam(username);
@@ -212,14 +222,15 @@ int main(int argc, char **argv)
 		snprintf(addr.sun_path, sizeof(addr.sun_path) - 1, "%s/%s", root, proto);
 		unlink(addr.sun_path);
 
-		printf("echo: bind\n");
+		printf("echo: bind %s\n", addr.sun_path);
 		ret = bind(sock, (struct sockaddr *) &addr, sizeof(addr));
+		printf(" %d %s\n", ret, strerror(errno));
 		if (ret == 0)
 		{
 			chmod(addr.sun_path, 0777);
 			printf("echo: listen\n");
 			ret = listen(sock, maxclients);
-			printf("\b %d %s\n", ret, strerror(errno));
+			printf(" %d %s\n", ret, strerror(errno));
 		}
 		if ((mode & DAEMON) && (fork() != 0))
 		{
