@@ -212,7 +212,6 @@ int main(int argc, char **argv)
 			warn("user not found");
 	}
 
-	printf("echo: start\n");
 	sock = socket(SOCKDOMAIN, SOCK_STREAM, SOCKPROTOCOL);
 	if (sock > 0)
 	{
@@ -238,6 +237,7 @@ int main(int argc, char **argv)
 			printf("echo: daemonize\n");
 			return 0;
 		}
+		printf("echo: start\n");
 		if (ret == 0)
 		{
 			int newsock = 0;
