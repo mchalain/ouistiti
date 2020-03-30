@@ -220,9 +220,11 @@ int main(int argc, char **argv)
 		addr.sun_family = AF_UNIX;
 		snprintf(addr.sun_path, sizeof(addr.sun_path) - 1, "%s/%s", root, proto);
 
+		printf("echo: unlink %s\n", addr.sun_path);
 		ret = access(addr.sun_path, R_OK);
 		if (ret)
-			unlink(addr.sun_path);
+			ret = unlink(addr.sun_path);
+		printf(" %d %s\n", ret, strerror(errno));
 
 		printf("echo: bind %s\n", addr.sun_path);
 		ret = bind(sock, (struct sockaddr *) &addr, sizeof(addr));
@@ -238,6 +240,7 @@ int main(int argc, char **argv)
 		{
 			printf("echo: daemonize\n");
 			sched_yield();
+			sleep(2);
 			return 0;
 		}
 		printf("echo: start\n");
