@@ -102,7 +102,7 @@ do
 	if [ -n "$PREPARE_ASYNC" ]; then
 		$PREPARE_ASYNC &
 		ASYNC_PID=$!
-		sleep 1
+		sleep 4
 	fi
 
 	if [ -n "$PREPARE" ]; then
