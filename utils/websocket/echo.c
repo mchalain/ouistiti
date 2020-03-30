@@ -219,7 +219,10 @@ int main(int argc, char **argv)
 		memset(&addr, 0, sizeof(struct sockaddr_un));
 		addr.sun_family = AF_UNIX;
 		snprintf(addr.sun_path, sizeof(addr.sun_path) - 1, "%s/%s", root, proto);
-		unlink(addr.sun_path);
+
+		ret = access(addr.sun_path, R_OK);
+		if (ret)
+			unlink(addr.sun_path);
 
 		printf("echo: bind %s\n", addr.sun_path);
 		ret = bind(sock, (struct sockaddr *) &addr, sizeof(addr));
