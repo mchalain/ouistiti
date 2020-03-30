@@ -236,8 +236,8 @@ int main(int argc, char **argv)
 		}
 		if ((mode & DAEMON) && (fork() != 0))
 		{
-
 			printf("echo: daemonize\n");
+			sched_yield();
 			return 0;
 		}
 		printf("echo: start\n");
