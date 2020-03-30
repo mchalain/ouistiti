@@ -1,6 +1,8 @@
 language: C
 compiler: gcc
-dist: bionic
+dist:
+ - xenial
+ - bionic
 
 #branches:
 #  only:
