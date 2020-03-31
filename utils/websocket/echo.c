@@ -106,7 +106,15 @@ void help(char **argv)
 	fprintf(stderr, "%s [-R <socket directory>] [-m <nb max clients>] [-u <user>][ -h]\n", argv[0]);
 }
 
-#ifndef PTHREAD
+#ifdef USE_PTHREAD
+#include <pthread.h>
+pthread_t thread;
+typedef void *(*start_routine_t)(void*);
+int start(server_t server, int newsock)
+{
+	pthread_create(&thread, NULL, (start_routine_t)server, (void *)&newsock);
+}
+#else
 int start(server_t server, int newsock)
 {
 	if (fork() == 0)
@@ -121,14 +129,6 @@ int start(server_t server, int newsock)
 	printf("close\n");
 	close(newsock);
 	return 0;
-}
-#else
-#include <pthread.h>
-typedef void *(*start_routine_t)(void*);
-int start(server_t server, int newsock)
-{
-	pthread_t thread;
-	pthread_create(&thread, NULL, (start_routine_t)server, (void *)&newsock);
 }
 #endif
 
@@ -250,6 +250,10 @@ int main(int argc, char **argv)
 				if (newsock > 0)
 				{
 					start(echo, newsock);
+					if (mode & TEST)
+					{
+						newsock = -1;
+					}
 				}
 			} while(newsock > 0);
 		}
@@ -259,5 +263,8 @@ int main(int argc, char **argv)
 	{
 		printf("echo: error %s\n", strerror(errno));
 	}
+#ifdef USE_PTHREAD
+	pthread_join(thread, NULL);
+#endif
 	return ret;
 }

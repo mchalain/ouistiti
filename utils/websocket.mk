@@ -18,7 +18,6 @@ endif
 
 bin-$(WS_ECHO)+=websocket_echo
 websocket_echo_SOURCES+=$(WS_SRC)echo.c
-websocket_echo_CFLAGS+=-DPTHREAD
 websocket_echo_LDFLAGS-$(WEBSOCKET_RT)+=$(LIBHTTPSERVER_LDFLAGS)
 websocket_echo_LIBS-$(WEBSOCKET_RT)+=ouistiti_ws websocket c
 websocket_echo_LIBS+=pthread
