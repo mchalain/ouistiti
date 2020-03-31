@@ -108,7 +108,7 @@ void help(char **argv)
 
 #ifdef USE_PTHREAD
 #include <pthread.h>
-pthread_t thread;
+pthread_t thread = 0;
 typedef void *(*start_routine_t)(void*);
 int start(server_t server, int newsock)
 {
@@ -219,17 +219,18 @@ int main(int argc, char **argv)
 		snprintf(addr.sun_path, sizeof(addr.sun_path) - 1, "%s/%s", root, proto);
 
 		ret = access(addr.sun_path, R_OK);
-		if (ret)
+		if (ret == 0)
 			ret = unlink(addr.sun_path);
 
 		printf("echo: bind %s\n", addr.sun_path);
 		ret = bind(sock, (struct sockaddr *) &addr, sizeof(addr));
-		printf(" %d %s\n", ret, strerror(errno));
 		if (ret == 0)
 		{
 			chmod(addr.sun_path, 0777);
 			ret = listen(sock, maxclients);
 		}
+		else
+			printf(" %d %s\n", ret, strerror(errno));
 		if ((mode & DAEMON) && (fork() != 0))
 		{
 			printf("echo: daemonize\n");

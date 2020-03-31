@@ -1,7 +1,7 @@
 DESC="test websocket startup"
 CONFIG=test5.conf
-PREPARE_ASYNC="./utils/websocket_echo -R $PWD/tests/ -u $USER -t"
-#PREPARE="./utils/websocket_echo -R $PWD/tests/ -u $USER -t -D"
+#PREPARE_ASYNC="./utils/websocket_echo -R $PWD/tests/ -u $USER -t"
+PREPARE="./utils/websocket_echo -R $PWD/tests/ -u $USER -t -D"
 #CLEAN="killall -9 websocket_echo"
 TESTOPTION="-w"
 TESTREQUEST=test24_rq.txt
