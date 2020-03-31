@@ -67,6 +67,7 @@ int echo(int *psock)
 		FD_ZERO(&rfds);
 		FD_SET(sock, &rfds);
 
+		printf("echo: wait\n");
 		ret = select(sock + 1, &rfds, NULL, NULL, NULL);
 		if (ret > 0 && FD_ISSET(sock, &rfds))
 		{
@@ -89,13 +90,14 @@ int echo(int *psock)
 			}
 			if (ret <= 0 && errno != EAGAIN)
 			{
-				if (ret == -1)
+				//if (ret == -1)
 					printf("echo: close %s\n", strerror(errno));
 				close(sock);
 				sock = -1;
 			}
 		}
 	}
+	printf("echo: thread end\n");
 	return ret;
 }
 
@@ -180,15 +182,10 @@ int main(int argc, char **argv)
 		}
 	} while(opt != -1);
 
-
-	printf("echo: access\n");
 	ret = access(root, R_OK|W_OK|X_OK);
-	printf(" %d %s\n", ret, strerror(errno));
 	if (ret < 0)
 	{
-		printf("echo: mkdir\n");
 		ret = mkdir(root, 0777);
-		printf(" %d %s\n", ret, strerror(errno));
 		if (ret)
 		{
 			err("access %s error %s", root, strerror(errno));
@@ -197,9 +194,7 @@ int main(int argc, char **argv)
 		chmod(root, 0777);
 	}
 
-	printf("echo: getuid\n");
 	ret = getuid();
-	printf(" %d %s\n", ret, strerror(errno));
 	if (ret == 0)
 	{
 		struct passwd *user = NULL;
@@ -223,11 +218,9 @@ int main(int argc, char **argv)
 		addr.sun_family = AF_UNIX;
 		snprintf(addr.sun_path, sizeof(addr.sun_path) - 1, "%s/%s", root, proto);
 
-		printf("echo: unlink %s\n", addr.sun_path);
 		ret = access(addr.sun_path, R_OK);
 		if (ret)
 			ret = unlink(addr.sun_path);
-		printf(" %d %s\n", ret, strerror(errno));
 
 		printf("echo: bind %s\n", addr.sun_path);
 		ret = bind(sock, (struct sockaddr *) &addr, sizeof(addr));
@@ -235,9 +228,7 @@ int main(int argc, char **argv)
 		if (ret == 0)
 		{
 			chmod(addr.sun_path, 0777);
-			printf("echo: listen\n");
 			ret = listen(sock, maxclients);
-			printf(" %d %s\n", ret, strerror(errno));
 		}
 		if ((mode & DAEMON) && (fork() != 0))
 		{
@@ -245,16 +236,13 @@ int main(int argc, char **argv)
 			sched_yield();
 			return 0;
 		}
-		printf("echo: start\n");
 		if (ret == 0)
 		{
 			int newsock = 0;
-			printf("echo: main loop\n");
 			do
 			{
 				struct sockaddr_in addr;
 				int addrsize = sizeof(addr);
-				printf("echo: wait\n");
 				//newsock = accept(sock, (struct sockaddr *)&addr, &addrsize);
 				//printf("echo: new connection from %s\n", inet_ntoa(addr.sin_addr));
 				newsock = accept(sock, NULL, NULL);
