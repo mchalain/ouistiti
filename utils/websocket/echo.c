@@ -147,6 +147,9 @@ int main(int argc, char **argv)
 	int maxclients = 50;
 	const char *username = str_username;
 
+	setbuf(stdout, NULL);
+	setbuf(stderr, NULL);
+
 	int opt;
 	do
 	{
@@ -240,7 +243,6 @@ int main(int argc, char **argv)
 		{
 			printf("echo: daemonize\n");
 			sched_yield();
-			sleep(2);
 			return 0;
 		}
 		printf("echo: start\n");
