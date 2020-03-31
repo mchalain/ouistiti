@@ -78,7 +78,7 @@ int echo(int *psock)
 				char *out = buffer;
 				ret = strlen(out);
 				ret = send(sock, out, ret, MSG_DONTWAIT | MSG_NOSIGNAL);
-				if (mode != TEST)
+				if (mode & TEST)
 				{
 					char ping[] = { 0x8A, 0x00};
 					ret = send(sock, ping, sizeof(ping), MSG_DONTWAIT | MSG_NOSIGNAL);
